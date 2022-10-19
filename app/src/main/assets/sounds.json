@@ -1,0 +1,64 @@
+{
+  "sounds": [
+    {
+      "soundID": "test1",
+      "name": "Test Sound 1",
+      "description": "Test description 1."
+    },
+    {
+      "soundID": "test2",
+      "name": "Test Sound 2",
+      "description": "Test description \nNew line character."
+    },
+    {
+      "soundID": "test3",
+      "name": "Test Sound 3",
+      "description": "Test description 3. Longer description. Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test."
+    },
+    {
+      "soundID": "test4",
+      "name": "Test Sound 4",
+      "description": "Test description 4\n\tNew line and tab."
+    },
+	{
+      "soundID": "test5",
+      "name": "Test Sound 5",
+      "description": "Test description 5."
+    },
+	{
+      "soundID": "test6",
+      "name": "Test Sound 6",
+      "description": "Test description 6."
+    },
+	{
+      "soundID": "test7",
+      "name": "Test Sound 7",
+      "description": "Test description 7."
+    },
+	{
+      "soundID": "test8",
+      "name": "Test Sound 8",
+      "description": "Test description 8."
+    },
+	{
+      "soundID": "test9",
+      "name": "Test Sound 9",
+      "description": "Test description 9."
+    },
+	{
+      "soundID": "test10",
+      "name": "Test Sound 10",
+      "description": "Test description 10."
+    },
+	{
+      "soundID": "test11",
+      "name": "Test Sound 11",
+      "description": "Test description 11."
+    },
+	{
+      "soundID": "test12",
+      "name": "Test Sound 12",
+      "description": "Test description 12."
+    }
+  ]
+}
