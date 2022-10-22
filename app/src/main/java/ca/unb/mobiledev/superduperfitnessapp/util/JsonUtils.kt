@@ -32,10 +32,6 @@ class JsonUtils(context: Context) {
             // This array is the "courses" array mentioned in the lab write-up
             val jsonArray = jsonObject.getJSONArray(KEY_SOUND)
             for (i in 0 until jsonArray.length()) {
-                // TODO 1:
-                //  Using the JSON array update coursesArray
-                //  1. Retrieve the current object by index
-                //  2. Add new Course to courses ArrayList
                 val obj = jsonArray.getJSONObject(i)
 
                 val sound = Sound.Builder().id(obj.getString(KEY_SOUND_ID)).name(obj.getString(KEY_NAME)).description(obj.getString(KEY_DESCRIPTION)).build()

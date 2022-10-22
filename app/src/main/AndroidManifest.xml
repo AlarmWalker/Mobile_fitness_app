@@ -40,6 +40,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".StartActivity" />
         </activity>
+        <activity
+            android:name=".RunningActivity"
+            android:label="Running Activity"
+            android:parentActivityName=".RunningActivity"
+            android:exported="true">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".SoundActivity" />
+        </activity>
     </application>
 
 </manifest>

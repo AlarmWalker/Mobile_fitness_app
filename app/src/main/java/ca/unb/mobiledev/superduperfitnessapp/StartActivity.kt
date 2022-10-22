@@ -60,18 +60,16 @@ class StartActivity : AppCompatActivity() {
         // onBindViewHolder binds a ViewHolder to the data at the specified
         // position in mDataset
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-            var course = mDataset[position]
-            holder.mTextView.text = course.title
+            val sound = mDataset[position]
+            holder.mTextView.text = sound.title
 
             holder.mTextView.setOnClickListener {
                 val intent = Intent(parentActivity, SoundActivity::class.java)
 
-                intent.putExtra("title",  course.title)
-                intent.putExtra("description", course.description)
+                intent.putExtra("title",  sound.title)
+                intent.putExtra("description", sound.description)
 
                 val extras = intent.extras
-                extras?.putString("title", course.title)
-                extras?.putString("description", course.description)
 
                 try {
                     startActivity( holder.mTextView.context, intent, extras)
