@@ -24,11 +24,11 @@ class StartActivity : AppCompatActivity() {
         setContentView(R.layout.activity_start)
 
         val utils = JsonUtils(applicationContext)
-        val courses = utils.getCourses()
+        val sounds = utils.getSounds()
 
         val view = findViewById<RecyclerView>(R.id.recycler_view)
 
-        val adp = MyAdapter(courses, this)
+        val adp = MyAdapter(sounds, this)
         view.adapter = adp
     }
 
@@ -68,6 +68,7 @@ class StartActivity : AppCompatActivity() {
 
                 intent.putExtra("title",  sound.title)
                 intent.putExtra("description", sound.description)
+                intent.putExtra("soundTitle", sound.soundTitle)
 
                 val extras = intent.extras
 

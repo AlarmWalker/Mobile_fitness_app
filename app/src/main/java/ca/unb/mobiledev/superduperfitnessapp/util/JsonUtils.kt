@@ -34,11 +34,8 @@ class JsonUtils(context: Context) {
             for (i in 0 until jsonArray.length()) {
                 val obj = jsonArray.getJSONObject(i)
 
-                val sound = Sound.Builder().id(obj.getString(KEY_SOUND_ID)).name(obj.getString(KEY_NAME)).description(obj.getString(KEY_DESCRIPTION)).build()
-
-                //Log.e("Array: ", obj.getString(KEY_COURSE_ID))
-                //Log.e("Array: ", obj.getString(KEY_NAME))
-                //Log.e("Array: ", obj.getString(KEY_DESCRIPTION))
+                val sound = Sound.Builder().id(obj.getString(KEY_SOUND_ID)).name(obj.getString(KEY_NAME)).description(obj.getString(KEY_DESCRIPTION)).soundTitle(obj.getString(
+                    KEY_SOUND_TITLE)).build()
 
                 sounds.add(i, sound)
             }
@@ -65,7 +62,7 @@ class JsonUtils(context: Context) {
     }
 
     // Getter method for courses ArrayList
-    fun getCourses(): ArrayList<Sound> {
+    fun getSounds(): ArrayList<Sound> {
         return sounds
     }
 
@@ -75,5 +72,6 @@ class JsonUtils(context: Context) {
         private const val KEY_SOUND_ID = "soundID"
         private const val KEY_NAME = "name"
         private const val KEY_DESCRIPTION = "description"
+        private const val KEY_SOUND_TITLE = "soundTitle"
     }
 }
