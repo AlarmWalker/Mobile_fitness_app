@@ -1,0 +1,39 @@
+{
+  "locations": [
+    {
+      "locationID": "1",
+      "longitude": "-66.6484886",
+      "latitude": "45.9432708"
+    },
+	{
+      "locationID": "2",
+      "longitude": "-66.6526517",
+      "latitude": "45.9450126"
+    },
+	{
+      "locationID": "3",
+      "longitude": "-66.6515966",
+      "latitude": "45.9461551"
+    },
+	{
+      "locationID": "4",
+      "longitude": "-66.6533313",
+      "latitude": "45.9495255"
+    },
+	{
+      "locationID": "5",
+      "longitude": "-66.6528369",
+      "latitude": "45.950101"
+    },
+	{
+      "locationID": "6",
+      "longitude": "-66.6598441",
+      "latitude": "45.954281"
+    },
+	{
+      "locationID": "7",
+      "longitude": "-66.6594829",
+      "latitude": "45.9548344"
+    }
+  ]
+}
