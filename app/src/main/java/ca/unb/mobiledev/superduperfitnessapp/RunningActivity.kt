@@ -18,13 +18,14 @@ class RunningActivity: AppCompatActivity() {
     private var mActive : Boolean = false
     private val sdf: SimpleDateFormat = SimpleDateFormat("HH:mm:ss")
     private lateinit var Timer : TextView
-    private lateinit var Distance : TextView
     private lateinit var timeTest : Calendar
     private lateinit var pauseButton : Button
 
     // Prototype
     private lateinit var lastLocation : Location
     private lateinit var locationText: TextView
+    private lateinit var locationText2: TextView
+    private lateinit var locationText3: TextView
     private lateinit var locationManager : LocationManager
     private var count = 0
     private lateinit var timeArray : IntArray
@@ -37,7 +38,6 @@ class RunningActivity: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.running_activity)
         Timer = findViewById<TextView>(R.id.timer_text)
-        Distance = findViewById<TextView>(R.id.distance_text)
 
         timeTest = Calendar.getInstance()
         timeTest.set(Calendar.HOUR_OF_DAY, 0)
@@ -58,6 +58,8 @@ class RunningActivity: AppCompatActivity() {
         lastLocation.longitude = -66.647
         lastLocation.latitude = 45.940
         locationText = findViewById(R.id.locationText)
+        locationText2 = findViewById(R.id.locationText2)
+        locationText3 = findViewById(R.id.locationText3)
 
         timeArray = intArrayOf(80,60,50,140,10,150,40)
         val intent = intent
@@ -109,16 +111,24 @@ class RunningActivity: AppCompatActivity() {
         val distance = lastLocation.distanceTo(loc)
         val time = timeArray[count]
 
+        /*
         locationText.setText("Last location:\n\tLat:\t\t\t\t\t\t" + lastLocation.latitude
                 + "\n\tLong:\t\t\t\t" + lastLocation.longitude + "\nCurrent location:\n\tLat:\t\t\t\t\t\t"
                 + loc.latitude + "\n\tLong:\t\t\t\t" + loc.longitude + "\n\nDistance:\t\t" + distance
                 + "\nTime:\t\t\t\t\t" + time + "\nSpeed:\t\t\t\t" + distance/time)
+         */
 
-        lastLocation = loc
+        locationText.setText("Last location:\n\tLat:\t\t\t\t\t\t" + lastLocation.latitude
+                + "\n\tLong:\t\t\t\t" + lastLocation.longitude)
+        locationText2.setText("Current location:\n\tLat:\t\t\t\t\t\t" + loc.latitude + "\n\tLong:\t\t\t\t"
+                + loc.longitude)
+        locationText3.setText("Distance:\t\t" + distance + "\nTime:\t\t\t" + time + "\nSpeed:\t\t" + distance/time)
 
         currVolume = (distance/time).toDouble()
         val log1 = (Math.log(maxVolume - (10-currVolume)) / Math.log(maxVolume)).toFloat()
         player.setVolume(log1, log1)
+
+        lastLocation = loc
 
         return distance
     }
@@ -133,13 +143,5 @@ class RunningActivity: AppCompatActivity() {
         }
 
         player.start()
-        /*
-        if (player.isPlaying) {
-            player.pause()
-        } else {
-            player.start()
-        }
-
-         */
     }
 }
