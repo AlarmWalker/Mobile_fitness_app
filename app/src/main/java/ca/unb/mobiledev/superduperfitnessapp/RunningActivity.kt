@@ -118,11 +118,11 @@ class RunningActivity: AppCompatActivity() {
                 + "\nTime:\t\t\t\t\t" + time + "\nSpeed:\t\t\t\t" + distance/time)
          */
 
-        locationText.setText("Last location:\n\tLat:\t\t\t\t\t\t" + lastLocation.latitude
-                + "\n\tLong:\t\t\t\t" + lastLocation.longitude)
-        locationText2.setText("Current location:\n\tLat:\t\t\t\t\t\t" + loc.latitude + "\n\tLong:\t\t\t\t"
+        locationText.setText("Last location:\n\nLat:\t\t\t\t" + lastLocation.latitude
+                + "\nLong:\t\t" + lastLocation.longitude)
+        locationText2.setText("Current location:\n\nLat:\t\t\t\t" + loc.latitude + "\nLong:\t\t"
                 + loc.longitude)
-        locationText3.setText("Distance:\t\t" + distance + "\nTime:\t\t\t" + time + "\nSpeed:\t\t" + distance/time)
+        locationText3.setText("Distance:\t\t" + distance + "\nTime:\t\t\t\t\t" + time + "\nSpeed:\t\t\t\t" + distance/time)
 
         currVolume = (distance/time).toDouble()
         val log1 = (Math.log(maxVolume - (10-currVolume)) / Math.log(maxVolume)).toFloat()
