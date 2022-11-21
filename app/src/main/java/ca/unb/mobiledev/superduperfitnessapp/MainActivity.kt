@@ -8,13 +8,15 @@ import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import java.text.SimpleDateFormat
 import java.util.*
 
 
-class MainActivity : AppCompatActivity() {
+class
+MainActivity : AppCompatActivity() {
 
     private var mHandler: Handler = Handler(Looper.getMainLooper())
     private lateinit var mClock : TextView
@@ -36,6 +38,17 @@ class MainActivity : AppCompatActivity() {
                 startActivity(intent)
             } catch (ex: ActivityNotFoundException) {
                 Log.e(TAG, "Unable to load activity", ex)
+            }
+        }
+
+        val settingIcon = findViewById<ImageView>(R.id.setting_icon)
+
+        settingIcon.setOnClickListener {
+            val intent = Intent(this@MainActivity, SettingActivity::class.java)
+            try {
+                startActivity(intent)
+            } catch (ex: ActivityNotFoundException) {
+                Log.e(TAG, "Unable to load setting activity", ex)
             }
         }
     }
