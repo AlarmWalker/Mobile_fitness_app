@@ -1,15 +1,24 @@
 package ca.unb.mobiledev.superduperfitnessapp
 
+import android.Manifest
+import android.annotation.SuppressLint
+import android.content.Intent
+import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationManager
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.provider.Settings
+import android.util.Log
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import ca.unb.mobiledev.superduperfitnessapp.util.LocationJsonUtils
+import com.google.android.gms.location.*
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -19,24 +28,28 @@ class RunningActivity: AppCompatActivity() {
     private val sdf: SimpleDateFormat = SimpleDateFormat("HH:mm:ss")
     private lateinit var Timer : TextView
     private lateinit var timeTest : Calendar
-    private lateinit var pauseButton : Button
+
+    // Location provider
+    private var fusedLocationClient: FusedLocationProviderClient? = null
+    private lateinit var prevLocation : Location
+    private var startTime : Long = 0
 
     // Prototype
-    private lateinit var lastLocation : Location
     private lateinit var locationText: TextView
     private lateinit var locationText2: TextView
-    private lateinit var locationText3: TextView
-    private lateinit var locationManager : LocationManager
-    private var count = 0
-    private lateinit var timeArray : IntArray
     private lateinit var player : MediaPlayer
     private val maxVolume : Double = 10.0
     private var currVolume : Double = 5.0
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.running_activity)
+
+        runClock()
+
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+
+        // Timer
         Timer = findViewById<TextView>(R.id.timer_text)
 
         timeTest = Calendar.getInstance()
@@ -44,13 +57,7 @@ class RunningActivity: AppCompatActivity() {
         timeTest.set(Calendar.MINUTE, 0)
         timeTest.set(Calendar.SECOND, 0)
 
-        pauseButton = findViewById<Button>(R.id.pause_button)
-        pauseButton.setText("Start")
-
-        pauseButton.setOnClickListener {
-            runClock()
-        }
-
+        /*
         // Prototype testing functions
         val utils = LocationJsonUtils(applicationContext)
         val locations = utils.getLocations()
@@ -62,20 +69,24 @@ class RunningActivity: AppCompatActivity() {
         locationText3 = findViewById(R.id.locationText3)
 
         timeArray = intArrayOf(80,60,50,140,10,150,40)
+         */
+
         val intent = intent
         val extras = intent.extras
+        locationText = findViewById(R.id.locationText)
+        locationText2 = findViewById(R.id.locationText2)
 
+        startTime = timeTest.timeInMillis
+
+        // Create an instance of the FusedLocationProviderClient
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
         val locationButton = findViewById<Button>(R.id.location_button)
         locationButton.setOnClickListener {
-            if (count == 6) {
-                locationButton.isEnabled = false
-            }
-            val fileName = extras?.getString("soundTitle")
-            audioPlayer(fileName.toString())
+            //val fileName = extras?.getString("soundTitle")
+            //audioPlayer(fileName.toString())
 
-            onLocationChanged(locations.get(count), count)
-            count++
+            lastLocation
         }
     }
 
@@ -89,14 +100,7 @@ class RunningActivity: AppCompatActivity() {
     }
 
     private fun runClock() {
-        if (mActive) {
-            mActive = false
-            pauseButton.setText("Resume")
-        }
-        else {
-            mActive = true
-            pauseButton.setText("Pause")
-        }
+        mActive = !mActive
 
         mHandler.post(mRunnable)
     }
@@ -106,6 +110,7 @@ class RunningActivity: AppCompatActivity() {
         return sdf.format(timeTest.time)
     }
 
+    /*
     // Location tracking function
     private fun onLocationChanged (loc : Location, count : Int) : Float {
         val distance = lastLocation.distanceTo(loc)
@@ -132,6 +137,8 @@ class RunningActivity: AppCompatActivity() {
 
         return distance
     }
+     */
+
 
     private fun audioPlayer(fileName: String)
     {
@@ -143,5 +150,134 @@ class RunningActivity: AppCompatActivity() {
         }
 
         player.start()
+    }
+
+    /*
+    Location tracking services
+     */
+
+    // Got last known location. In some rare situations this can be null.
+    @get:SuppressLint("MissingPermission")
+    private val lastLocation: Unit
+        get() {
+            checkPermissions()
+            if (isLocationEnabled) {
+                fusedLocationClient!!.lastLocation
+                    .addOnSuccessListener(this) { lastLocation: Location? ->
+                        // Got last known location. In some rare situations this can be null.
+                        if (lastLocation != null) {
+                            Log.e("lastLocation", "Running")
+                            if (!this::prevLocation.isInitialized) {
+                                prevLocation = lastLocation
+                            }
+                            requestNewLocationData()
+                            setTextViewDisplay(lastLocation)
+                            prevLocation = lastLocation
+                        } else {
+                            locationText!!.text = getString(R.string.fetch_location_error)
+                            requestNewLocationData()
+                        }
+                    }
+            } else {
+                Toast.makeText(this, "Please turn location services on", Toast.LENGTH_LONG).show()
+                val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
+                startActivity(intent)
+            }
+        }
+
+    private fun setTextViewDisplay(location: Location) {
+        Log.e("setTextViewDisplay", "Running")
+        val latitude = location.latitude.toString()
+        val longitude = location.longitude.toString()
+        val accuracy = location.accuracy.toString()
+
+        val time = (timeTest.timeInMillis - startTime)/1000
+        val speed = (prevLocation.distanceTo(location)/time).toString()
+        val text = getString(R.string.location_details, latitude, longitude, accuracy, time.toString(), speed)
+        val text2 = getString(R.string.location_details2, prevLocation.latitude.toString(),
+            prevLocation.longitude.toString(), prevLocation.accuracy.toString())
+        locationText!!.text = text
+        locationText2!!.text = text2
+    }
+
+    /**
+     * Method to determine if the user has granted the appropriate access levels
+     */
+    private fun checkPermissions() {
+        if (ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+            && ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
+        ) {
+            requestRuntimePermissions()
+        }
+    }
+
+    /**
+     * Grants the appropriate permissions
+     */
+    private fun requestRuntimePermissions() {
+        ActivityCompat.requestPermissions(this, arrayOf(
+            Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION
+        ), LOCATION_REQUEST)
+    }
+
+    /**
+     * Checks to see if the user has turned on location from Settings
+     * @return The location manager object
+     */
+    private val isLocationEnabled: Boolean
+        get() {
+            val locationManager = getSystemService(LOCATION_SERVICE) as LocationManager
+            return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(
+                LocationManager.NETWORK_PROVIDER
+            )
+        }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray,
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == LOCATION_REQUEST) { // If request is cancelled, the result arrays are empty.
+            if (grantResults.isNotEmpty()
+                && grantResults[0] == PackageManager.PERMISSION_GRANTED
+            ) {
+                Log.i(TAG, "onRequestPermissionsResult: Granted")
+                lastLocation
+            } else {
+                Toast.makeText(this, "onRequestPermissionsResult: Denied", Toast.LENGTH_SHORT)
+                    .show()
+                Log.i(TAG, "onRequestPermissionsResult: Denied")
+            }
+        }
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun requestNewLocationData() {
+        val locationRequest = LocationRequest.Builder(UPDATE_INTERVAL)
+            .setPriority(Priority.PRIORITY_HIGH_ACCURACY)
+            .setIntervalMillis(5000)
+            .setMaxUpdateDelayMillis(5000)
+            .build()
+
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+        fusedLocationClient!!.requestLocationUpdates(
+            locationRequest, mLocationCallback,
+            Looper.myLooper()!!
+        )
+    }
+
+    private val mLocationCallback: LocationCallback = object : LocationCallback() {
+        override fun onLocationResult(locationResult: LocationResult) {
+            locationResult.lastLocation?.let { lastLocation }
+        }
+    }
+
+    companion object {
+        private const val TAG = "TAG"
+        private const val UPDATE_INTERVAL: Long = 5000
+        private const val LOCATION_REQUEST = 101
     }
 }
