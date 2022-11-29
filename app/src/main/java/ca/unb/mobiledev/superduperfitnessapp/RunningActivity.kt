@@ -2,6 +2,7 @@ package ca.unb.mobiledev.superduperfitnessapp
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
@@ -21,6 +22,9 @@ import ca.unb.mobiledev.superduperfitnessapp.util.LocationJsonUtils
 import com.google.android.gms.location.*
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.math.ln
+import kotlin.math.log
+import kotlin.math.log10
 
 class RunningActivity: AppCompatActivity() {
     private var mHandler: Handler = Handler(Looper.getMainLooper())
@@ -32,11 +36,17 @@ class RunningActivity: AppCompatActivity() {
     // Location provider
     private var fusedLocationClient: FusedLocationProviderClient? = null
     private lateinit var prevLocation : Location
-    private var startTime : Long = 0
 
-    // Prototype
+    private var startTime : Long = 0
+    private var distanceFromPlayer : Double = 100.0
+    private var entitySpeed : Long = 8
+    private var totalDistance : Double = 0.0
+
     private lateinit var locationText: TextView
     private lateinit var locationText2: TextView
+    private lateinit var locationText3: TextView
+    private lateinit var locationText4: TextView
+
     private lateinit var player : MediaPlayer
     private val maxVolume : Double = 10.0
     private var currVolume : Double = 5.0
@@ -73,8 +83,11 @@ class RunningActivity: AppCompatActivity() {
 
         val intent = intent
         val extras = intent.extras
+
         locationText = findViewById(R.id.locationText)
         locationText2 = findViewById(R.id.locationText2)
+        locationText3 = findViewById(R.id.locationText3)
+        locationText4 = findViewById(R.id.locationText4)
 
         startTime = timeTest.timeInMillis
 
@@ -83,11 +96,14 @@ class RunningActivity: AppCompatActivity() {
 
         val locationButton = findViewById<Button>(R.id.location_button)
         locationButton.setOnClickListener {
-            //val fileName = extras?.getString("soundTitle")
-            //audioPlayer(fileName.toString())
+            val fileName = extras?.getString("soundTitle")
+            audioPlayer(fileName.toString())
 
             lastLocation
         }
+
+        val endButton = findViewById<Button>(R.id.end_button)
+        endButton.setOnClickListener { lost() }
     }
 
     private val mRunnable: Runnable = object : Runnable {
@@ -139,7 +155,6 @@ class RunningActivity: AppCompatActivity() {
     }
      */
 
-
     private fun audioPlayer(fileName: String)
     {
         if (!this::player.isInitialized) {
@@ -171,6 +186,29 @@ class RunningActivity: AppCompatActivity() {
                                 prevLocation = lastLocation
                             }
                             requestNewLocationData()
+
+                            // Sound adjustment
+                            val time = 5
+                            val elapsedTime = (timeTest.timeInMillis-startTime)/1000
+                            val speed = prevLocation.distanceTo(lastLocation)/time
+
+                            distanceFromPlayer -= time*(entitySpeed-speed)
+                            totalDistance += time*speed
+
+                            // Current setting is 200m as the max distance for sound
+                            var log1 = log(maxVolume-(distanceFromPlayer/20), 10.0).toFloat()
+                            if (distanceFromPlayer > 200) {
+                                log1 = 0.01f
+                            }
+                            player.setVolume(log1, log1)
+
+                            // Entity caught up
+                            if (distanceFromPlayer <= 0) { lost() }
+
+                            locationText3.text = "Time: " + elapsedTime + "\nSpeed: "  + speed +
+                                    "\nDistance: " + distanceFromPlayer + "\nVolume: " + log1
+
+                            // Test
                             setTextViewDisplay(lastLocation)
                             prevLocation = lastLocation
                         } else {
@@ -185,6 +223,17 @@ class RunningActivity: AppCompatActivity() {
             }
         }
 
+    private fun lost() {
+        player.stop()
+        fusedLocationClient!!.removeLocationUpdates(mLocationCallback)
+
+        runClock()
+
+        val formattedDistance = String.format("%.2f", totalDistance)
+        locationText4.text = "You lost.\nYou ran a total of " + formattedDistance + "m in " +
+                ((timeTest.timeInMillis-startTime)/1000).toString() + "s."
+    }
+
     private fun setTextViewDisplay(location: Location) {
         Log.e("setTextViewDisplay", "Running")
         val latitude = location.latitude.toString()
@@ -193,11 +242,15 @@ class RunningActivity: AppCompatActivity() {
 
         val time = (timeTest.timeInMillis - startTime)/1000
         val speed = (prevLocation.distanceTo(location)/time).toString()
-        val text = getString(R.string.location_details, latitude, longitude, accuracy, time.toString(), speed)
-        val text2 = getString(R.string.location_details2, prevLocation.latitude.toString(),
+        val text = "Location:\n" + getString(R.string.location_details, latitude, longitude, accuracy, time.toString(), speed)
+        val text2 = "Last location:\n" + getString(R.string.location_details2, prevLocation.latitude.toString(),
             prevLocation.longitude.toString(), prevLocation.accuracy.toString())
-        locationText!!.text = text
-        locationText2!!.text = text2
+        locationText.text = text
+        locationText2.text = text2
+
+        currVolume = (prevLocation.distanceTo(location)/time).toDouble()
+        val log1 = (Math.log(maxVolume - (10-currVolume)) / Math.log(maxVolume)).toFloat()
+        player.setVolume(log1, log1)
     }
 
     /**
@@ -258,8 +311,8 @@ class RunningActivity: AppCompatActivity() {
     private fun requestNewLocationData() {
         val locationRequest = LocationRequest.Builder(UPDATE_INTERVAL)
             .setPriority(Priority.PRIORITY_HIGH_ACCURACY)
-            .setIntervalMillis(5000)
-            .setMaxUpdateDelayMillis(5000)
+            .setIntervalMillis(UPDATE_INTERVAL)
+            .setMaxUpdateDelayMillis(UPDATE_INTERVAL)
             .build()
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
