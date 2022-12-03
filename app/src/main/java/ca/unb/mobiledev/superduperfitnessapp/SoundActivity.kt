@@ -44,7 +44,7 @@ class SoundActivity : AppCompatActivity()
 
         var volumeText = findViewById<TextView>(R.id.test_volume)
 
-        upButton = findViewById<Button>(R.id.volUp_button)
+        upButton = findViewById(R.id.volUp_button)
         upButton?.visibility = Button.INVISIBLE
         upButton.setOnClickListener {
             currVolume -= 1

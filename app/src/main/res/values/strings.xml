@@ -1,6 +1,12 @@
 <resources>
     <string name="app_name">SUPER DUPER FITNESS APP</string>
     <string name="fetch_location_error">Unable to fetch the location</string>
+
+    <!--Test-->
     <string name="location_details">Latitude: %1$s, Longitude: %2$s, Accuracy: %3$s, Time: %4$s, Speed: %5$s</string>
     <string name="location_details2">Latitude: %1$s, Longitude: %2$s, Accuracy: %3$s</string>
+
+    <!--UI Elements-->
+    <string name="startRun_button">Start</string>
+    <string name="end_button">End</string>
 </resources>
