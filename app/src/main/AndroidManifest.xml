@@ -54,6 +54,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".SoundActivity" />
         </activity>
+        <activity
+            android:name=".SettingActivity"
+            android:label="Setting Activity"
+            android:parentActivityName=".SettingActivity"
+            android:exported="true">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
     </application>
 
 </manifest>

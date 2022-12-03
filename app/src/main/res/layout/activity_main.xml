@@ -70,9 +70,9 @@
         android:id="@+id/setting_icon"
         android:layout_width="54dp"
         android:layout_height="43dp"
-        android:layout_marginBottom="684dp"
+        android:layout_marginBottom="57dp"
         android:src="@drawable/ic_baseline_settings_24"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/time"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent" />
@@ -81,12 +81,14 @@
         android:id="@+id/imageView"
         android:layout_width="118dp"
         android:layout_height="115dp"
-        android:layout_marginBottom="424dp"
+        android:layout_marginTop="88dp"
+        android:layout_marginBottom="9dp"
         android:src="@drawable/ic_baseline_account_circle_24"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/plain_text_input"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/time"
         tools:ignore="MissingConstraints" />
 
 
