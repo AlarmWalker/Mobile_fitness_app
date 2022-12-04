@@ -2,114 +2,168 @@ package ca.unb.mobiledev.superduperfitnessapp
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationManager
 import android.media.MediaPlayer
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.os.Handler
 import android.os.Looper
 import android.provider.Settings
 import android.util.Log
-import android.widget.Button
-import android.widget.TextView
-import android.widget.Toast
+import android.view.View
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import ca.unb.mobiledev.superduperfitnessapp.util.LocationJsonUtils
+import androidx.core.view.isVisible
 import com.google.android.gms.location.*
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.math.ln
 import kotlin.math.log
-import kotlin.math.log10
 
 class RunningActivity: AppCompatActivity() {
     private var mHandler: Handler = Handler(Looper.getMainLooper())
     private var mActive : Boolean = false
     private val sdf: SimpleDateFormat = SimpleDateFormat("HH:mm:ss")
-    private lateinit var Timer : TextView
-    private lateinit var timeTest : Calendar
+    private lateinit var timerText : TextView
+    private lateinit var elapsedTime : Calendar
+
+    private lateinit var startButton : Button
+    private lateinit var endButton : Button
+    private lateinit var countdownText : TextView
 
     // Location provider
     private var fusedLocationClient: FusedLocationProviderClient? = null
     private lateinit var prevLocation : Location
 
     private var startTime : Long = 0
-    private var distanceFromPlayer : Double = 100.0
+    private var distanceFromPlayer : Double = 120.0
     private var entitySpeed : Long = 8
     private var totalDistance : Double = 0.0
 
-    private lateinit var locationText: TextView
-    private lateinit var locationText2: TextView
-    private lateinit var locationText3: TextView
-    private lateinit var locationText4: TextView
+    private lateinit var distanceText: TextView
+    private lateinit var messageText: TextView
+
+    private lateinit var distanceBar : SeekBar
 
     private lateinit var player : MediaPlayer
     private val maxVolume : Double = 10.0
-    private var currVolume : Double = 5.0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.running_activity)
 
-        runClock()
-
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
-        // Timer
-        Timer = findViewById<TextView>(R.id.timer_text)
+        timerText = findViewById(R.id.timer_text)
 
-        timeTest = Calendar.getInstance()
-        timeTest.set(Calendar.HOUR_OF_DAY, 0)
-        timeTest.set(Calendar.MINUTE, 0)
-        timeTest.set(Calendar.SECOND, 0)
+        elapsedTime = Calendar.getInstance()
+        elapsedTime.set(Calendar.HOUR_OF_DAY, 0)
+        elapsedTime.set(Calendar.MINUTE, 0)
+        elapsedTime.set(Calendar.SECOND, 0)
 
-        /*
-        // Prototype testing functions
-        val utils = LocationJsonUtils(applicationContext)
-        val locations = utils.getLocations()
-        lastLocation = Location("")
-        lastLocation.longitude = -66.647
-        lastLocation.latitude = 45.940
-        locationText = findViewById(R.id.locationText)
-        locationText2 = findViewById(R.id.locationText2)
-        locationText3 = findViewById(R.id.locationText3)
+        distanceText = findViewById(R.id.distanceText)
+        messageText = findViewById(R.id.messageText)
+        countdownText = findViewById(R.id.countDown_text)
 
-        timeArray = intArrayOf(80,60,50,140,10,150,40)
-         */
+        distanceBar = findViewById(R.id.distanceBar)
+        distanceBar.max = 100
 
-        val intent = intent
-        val extras = intent.extras
-
-        locationText = findViewById(R.id.locationText)
-        locationText2 = findViewById(R.id.locationText2)
-        locationText3 = findViewById(R.id.locationText3)
-        locationText4 = findViewById(R.id.locationText4)
-
-        startTime = timeTest.timeInMillis
+        startTime = elapsedTime.timeInMillis
 
         // Create an instance of the FusedLocationProviderClient
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
-        val locationButton = findViewById<Button>(R.id.location_button)
+        /*
+        locationButton = findViewById(R.id.location_button)
         locationButton.setOnClickListener {
             val fileName = extras?.getString("soundTitle")
             audioPlayer(fileName.toString())
 
+            runClock()
             lastLocation
         }
 
-        val endButton = findViewById<Button>(R.id.end_button)
+         */
+
+        startButton = findViewById(R.id.startRun_button)
+        startButton.setOnClickListener { start() }
+
+        endButton = findViewById(R.id.end_button)
         endButton.setOnClickListener { lost() }
+
+        // Setting initial view visibilities
+        viewEnable(startButton)
+        viewEnable(countdownText)
+
+        viewDisable(timerText)
+        viewDisable(distanceText)
+        viewDisable(messageText)
+        viewDisable(endButton)
+        viewDisable(distanceBar)
+    }
+
+    private fun viewEnable(view : View) {
+        view.isEnabled = true
+        view.isClickable = true
+        view.isVisible = true
+    }
+
+    private fun viewDisable(view: View) {
+        view.isEnabled = false
+        view.isClickable = false
+        view.isVisible = false
+    }
+
+    private fun start() {
+        viewDisable(startButton)
+
+        countdownText.text = "5"
+        Handler(Looper.getMainLooper()).postDelayed({
+            val timer = object: CountDownTimer(5000, 250) {
+
+
+                override fun onTick(millisUntilFinished: Long) {
+                    if (millisUntilFinished < 1000) {
+                        countdownText.text = "1"
+                    }
+                    else {
+                        countdownText.text =(millisUntilFinished/1000).toString()
+                    }
+                }
+
+                override fun onFinish() {
+                    countdownText.isEnabled = false
+                    viewDisable(countdownText)
+
+                    viewEnable(timerText)
+                    viewEnable(distanceText)
+                    viewEnable(messageText)
+                    viewEnable(endButton)
+                    viewEnable(distanceBar)
+
+                    distanceBar.isEnabled = false
+
+                    val intent = intent
+                    val extras = intent.extras
+
+                    val fileName = extras?.getString("soundTitle")
+                    audioPlayer(fileName.toString())
+
+                    runClock()
+                    lastLocation
+                }
+            }
+            timer.start()
+        }, 1000)
     }
 
     private val mRunnable: Runnable = object : Runnable {
         override fun run() {
             if (mActive) {
-                Timer.setText(getTime())
+                timerText.setText(getTime())
                 mHandler.postDelayed(this, 1000)
             }
         }
@@ -122,38 +176,9 @@ class RunningActivity: AppCompatActivity() {
     }
 
     private fun getTime(): String? {
-        timeTest.add(Calendar.SECOND, 1)
-        return sdf.format(timeTest.time)
+        elapsedTime.add(Calendar.SECOND, 1)
+        return sdf.format(elapsedTime.time)
     }
-
-    /*
-    // Location tracking function
-    private fun onLocationChanged (loc : Location, count : Int) : Float {
-        val distance = lastLocation.distanceTo(loc)
-        val time = timeArray[count]
-
-        /*
-        locationText.setText("Last location:\n\tLat:\t\t\t\t\t\t" + lastLocation.latitude
-                + "\n\tLong:\t\t\t\t" + lastLocation.longitude + "\nCurrent location:\n\tLat:\t\t\t\t\t\t"
-                + loc.latitude + "\n\tLong:\t\t\t\t" + loc.longitude + "\n\nDistance:\t\t" + distance
-                + "\nTime:\t\t\t\t\t" + time + "\nSpeed:\t\t\t\t" + distance/time)
-         */
-
-        locationText.setText("Last location:\n\nLat:\t\t\t\t" + lastLocation.latitude
-                + "\nLong:\t\t" + lastLocation.longitude)
-        locationText2.setText("Current location:\n\nLat:\t\t\t\t" + loc.latitude + "\nLong:\t\t"
-                + loc.longitude)
-        locationText3.setText("Distance:\t\t" + distance + "\nTime:\t\t\t\t\t" + time + "\nSpeed:\t\t\t\t" + distance/time)
-
-        currVolume = (distance/time).toDouble()
-        val log1 = (Math.log(maxVolume - (10-currVolume)) / Math.log(maxVolume)).toFloat()
-        player.setVolume(log1, log1)
-
-        lastLocation = loc
-
-        return distance
-    }
-     */
 
     private fun audioPlayer(fileName: String)
     {
@@ -182,38 +207,23 @@ class RunningActivity: AppCompatActivity() {
                         // Got last known location. In some rare situations this can be null.
                         if (lastLocation != null) {
                             Log.e("lastLocation", "Running")
+
                             if (!this::prevLocation.isInitialized) {
                                 prevLocation = lastLocation
                             }
+
                             requestNewLocationData()
+                            locationUpdate(lastLocation)
+                            //setTextViewDisplay(lastLocation)
 
-                            // Sound adjustment
-                            val time = 5
-                            val elapsedTime = (timeTest.timeInMillis-startTime)/1000
-                            val speed = prevLocation.distanceTo(lastLocation)/time
-
-                            distanceFromPlayer -= time*(entitySpeed-speed)
-                            totalDistance += time*speed
-
-                            // Current setting is 200m as the max distance for sound
-                            var log1 = log(maxVolume-(distanceFromPlayer/20), 10.0).toFloat()
-                            if (distanceFromPlayer > 200) {
-                                log1 = 0.01f
-                            }
-                            player.setVolume(log1, log1)
-
-                            // Entity caught up
-                            if (distanceFromPlayer <= 0) { lost() }
-
-                            locationText3.text = "Time: " + elapsedTime + "\nSpeed: "  + speed +
-                                    "\nDistance: " + distanceFromPlayer + "\nVolume: " + log1
-
-                            // Test
-                            setTextViewDisplay(lastLocation)
                             prevLocation = lastLocation
                         } else {
-                            locationText!!.text = getString(R.string.fetch_location_error)
-                            requestNewLocationData()
+                            Handler(Looper.getMainLooper()).postDelayed({
+                                distanceText!!.text = getString(R.string.fetch_location_error)
+                                requestNewLocationData()
+                            }, 2000)
+                            //distanceText!!.text = getString(R.string.fetch_location_error)
+                            //requestNewLocationData()
                         }
                     }
             } else {
@@ -223,35 +233,64 @@ class RunningActivity: AppCompatActivity() {
             }
         }
 
+    private fun locationUpdate(lastLocation : Location) {
+        // Sound adjustment
+        val time = UPDATE_INTERVAL/1000
+        val speed = prevLocation.distanceTo(lastLocation)/time
+
+        distanceFromPlayer -= time*(entitySpeed-speed)
+        totalDistance += time*speed
+
+        distanceText.text = totalDistance.toString() + "m ran\n" + distanceFromPlayer + "m from you."
+
+        // Current setting is 100m as the max distance for sound
+        var log1 = log(maxVolume-(9*distanceFromPlayer/100), 10.0).toFloat()
+        if (distanceFromPlayer > 100) {
+            log1 = 0.1f
+            distanceBar.progress = 0
+        }
+        else {
+            distanceBar.progress = (100-distanceFromPlayer.toInt())
+        }
+        player.setVolume(log1, log1)
+
+        // Entity caught up
+        if (distanceFromPlayer <= 0) { lost() }
+
+    }
+
     private fun lost() {
+        Log.e("lost", "User lost.")
         player.stop()
         fusedLocationClient!!.removeLocationUpdates(mLocationCallback)
 
         runClock()
 
         val formattedDistance = String.format("%.2f", totalDistance)
-        locationText4.text = "You lost.\nYou ran a total of " + formattedDistance + "m in " +
-                ((timeTest.timeInMillis-startTime)/1000).toString() + "s."
+        messageText.text = "You lost.\nYou ran a total of " + formattedDistance + "m in " + ((elapsedTime.timeInMillis-startTime)/1000).toString() + "s."
     }
 
+    /*
     private fun setTextViewDisplay(location: Location) {
         Log.e("setTextViewDisplay", "Running")
         val latitude = location.latitude.toString()
         val longitude = location.longitude.toString()
         val accuracy = location.accuracy.toString()
 
-        val time = (timeTest.timeInMillis - startTime)/1000
+        val time = (elapsedTime.timeInMillis - startTime)/1000
         val speed = (prevLocation.distanceTo(location)/time).toString()
         val text = "Location:\n" + getString(R.string.location_details, latitude, longitude, accuracy, time.toString(), speed)
         val text2 = "Last location:\n" + getString(R.string.location_details2, prevLocation.latitude.toString(),
             prevLocation.longitude.toString(), prevLocation.accuracy.toString())
-        locationText.text = text
-        locationText2.text = text2
+        distanceText.text = text
+        messageText.text = text2
 
         currVolume = (prevLocation.distanceTo(location)/time).toDouble()
         val log1 = (Math.log(maxVolume - (10-currVolume)) / Math.log(maxVolume)).toFloat()
         player.setVolume(log1, log1)
     }
+
+     */
 
     /**
      * Method to determine if the user has granted the appropriate access levels
@@ -330,7 +369,7 @@ class RunningActivity: AppCompatActivity() {
 
     companion object {
         private const val TAG = "TAG"
-        private const val UPDATE_INTERVAL: Long = 5000
+        private const val UPDATE_INTERVAL: Long = 3000
         private const val LOCATION_REQUEST = 101
     }
 }
