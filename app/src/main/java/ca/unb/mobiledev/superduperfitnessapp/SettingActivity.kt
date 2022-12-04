@@ -20,7 +20,7 @@ class SettingActivity : AppCompatActivity() {
     private lateinit var audioManager: AudioManager
     private lateinit var sharedPref: SharedPreferences
     private lateinit var profilePic: ImageView
-    var mainActivity = MainActivity()
+    private lateinit var saveButton: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,18 +58,17 @@ class SettingActivity : AppCompatActivity() {
 
         var nicknameText = findViewById<EditText>(R.id.nickname)
         profilePic = findViewById<ImageView>(R.id.profilePic)
-        var saveButton = findViewById<Button>(R.id.saveButton)
+        saveButton = findViewById<Button>(R.id.saveButton)
         saveButton.setOnClickListener{
             val bitmap = (profilePic.drawable as BitmapDrawable).bitmap
 
             if(!TextUtils.isEmpty(nicknameText.text.toString())){
                 db(applicationContext).addBitmap(nicknameText.text.toString(), dbUtil.getBytes(bitmap))
-                Toast.makeText(this@SettingActivity, "Saved!", Toast.LENGTH_SHORT)
+                Toast.makeText(this@SettingActivity, "Saved!", Toast.LENGTH_SHORT).show()
             }
             else{
-                Toast.makeText(this@SettingActivity, "please fill in nickname!", Toast.LENGTH_SHORT)
+                Toast.makeText(this@SettingActivity, "please fill in nickname!", Toast.LENGTH_SHORT).show()
             }
-            mainActivity.savedName = sharedPref.getString("name", "default value") as String
         }
     }
 
@@ -78,6 +77,7 @@ class SettingActivity : AppCompatActivity() {
             if(it.resultCode == Activity.RESULT_OK){
                 val pickedImage = it.data?.data
                 profilePic.setImageURI(pickedImage)
+                saveButton.isEnabled = true
             }
         }
 

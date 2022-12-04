@@ -9,6 +9,7 @@ import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.widget.Button
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -26,7 +27,6 @@ MainActivity : AppCompatActivity() {
     private var mActive : Boolean = false
     private val sdf: SimpleDateFormat = SimpleDateFormat("hh:mm:ss")
     private lateinit var database: db
-    lateinit var savedName: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,6 +58,16 @@ MainActivity : AppCompatActivity() {
         }
 
         database = db(this)
+        val loadButton = findViewById<Button>(R.id.loadButton)
+
+        loadButton.setOnClickListener{
+            val profileIcon = findViewById<ImageView>(R.id.profileIcon)
+            val savedName = findViewById<EditText>(R.id.enterName)
+            if(database.getBitmapByName(savedName.text.toString()) != null){
+                val bitmap: Bitmap = dbUtil.getImage(database.getBitmapByName(savedName.text.toString())!!)
+                profileIcon.setImageBitmap(bitmap)
+            }
+        }
     }
 
 
@@ -78,13 +88,5 @@ MainActivity : AppCompatActivity() {
 
     private fun getTime(): String? {
         return sdf.format(Date(System.currentTimeMillis()))
-    }
-
-    fun getProfile() {
-        val profileIcon = findViewById<ImageView>(R.id.profileIcon)
-        if(database.getBitmapByName(savedName) != null){
-            val bitmap: Bitmap = dbUtil.getImage(database.getBitmapByName(savedName)!!)
-            profileIcon.setImageBitmap(bitmap)
-        }
     }
 }
