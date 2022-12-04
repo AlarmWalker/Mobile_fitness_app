@@ -15,7 +15,7 @@
         android:textColor="@color/black"
         android:textSize="32dp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/imageView2"
+        app:layout_constraintBottom_toTopOf="@+id/profilePic"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.096"
         app:layout_constraintStart_toStartOf="parent"
@@ -35,10 +35,10 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/imageView2" />
+        app:layout_constraintTop_toTopOf="@+id/profilePic" />
 
     <ImageView
-        android:id="@+id/imageView2"
+        android:id="@+id/profilePic"
         android:layout_width="125dp"
         android:layout_height="93dp"
         android:layout_marginStart="32dp"
@@ -49,7 +49,7 @@
         tools:ignore="MissingConstraints" />
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/button"
+        android:id="@+id/uploadButton"
         android:layout_width="125dp"
         android:layout_height="53dp"
         android:layout_marginTop="256dp"
@@ -88,7 +88,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/textView5"
+        android:id="@+id/nickname"
         android:layout_width="362dp"
         android:layout_height="48dp"
         android:layout_marginStart="16dp"
@@ -100,7 +100,7 @@
         app:layout_constraintTop_toTopOf="@+id/textView2" />
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/button2"
+        android:id="@+id/saveButton"
         android:layout_width="257dp"
         android:layout_height="58dp"
         android:layout_marginBottom="44dp"

@@ -3,6 +3,7 @@ package ca.unb.mobiledev.superduperfitnessapp
 import android.content.ActivityNotFoundException
 import android.content.ContentValues.TAG
 import android.content.Intent
+import android.graphics.Bitmap
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -11,6 +12,8 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import ca.unb.mobiledev.superduperfitnessapp.db.db
+import ca.unb.mobiledev.superduperfitnessapp.util.dbUtil
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -22,6 +25,8 @@ MainActivity : AppCompatActivity() {
     private lateinit var mClock : TextView
     private var mActive : Boolean = false
     private val sdf: SimpleDateFormat = SimpleDateFormat("hh:mm:ss")
+    private lateinit var database: db
+    lateinit var savedName: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,6 +56,8 @@ MainActivity : AppCompatActivity() {
                 Log.e(TAG, "Unable to load setting activity", ex)
             }
         }
+
+        database = db(this)
     }
 
 
@@ -73,5 +80,11 @@ MainActivity : AppCompatActivity() {
         return sdf.format(Date(System.currentTimeMillis()))
     }
 
-
+    fun getProfile() {
+        val profileIcon = findViewById<ImageView>(R.id.profileIcon)
+        if(database.getBitmapByName(savedName) != null){
+            val bitmap: Bitmap = dbUtil.getImage(database.getBitmapByName(savedName)!!)
+            profileIcon.setImageBitmap(bitmap)
+        }
+    }
 }
