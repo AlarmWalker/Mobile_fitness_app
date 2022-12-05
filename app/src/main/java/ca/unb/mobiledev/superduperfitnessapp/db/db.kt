@@ -3,10 +3,13 @@ package ca.unb.mobiledev.superduperfitnessapp.db
 import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Context
+import android.database.Cursor
 import android.database.sqlite.SQLiteException
 import android.database.sqlite.SQLiteQueryBuilder
 import android.util.Log
+import ca.unb.mobiledev.superduperfitnessapp.model.Record
 import com.readystatesoftware.sqliteasset.SQLiteAssetHelper
+import java.lang.Exception
 
 class db(context: Context) : SQLiteAssetHelper(context, DATABASE_NAME, null, DB_VER) {
 
@@ -17,8 +20,9 @@ class db(context: Context) : SQLiteAssetHelper(context, DATABASE_NAME, null, DB_
 
         cv.put(COL_NAME, name)
         cv.put(COL_DATA, image)
-        database.insertOrThrow(TABLE_NAME, null, cv)
+        database.insertOrThrow(TABLE_NAME1, null, cv)
         Log.i("db", "db updated")
+        database.close()
     }
 
     @SuppressLint("Range")
@@ -28,7 +32,7 @@ class db(context: Context) : SQLiteAssetHelper(context, DATABASE_NAME, null, DB_
 
         val sqlSelect = arrayOf(COL_DATA)
 
-        qb.tables = TABLE_NAME
+        qb.tables = TABLE_NAME1
         val c = qb.query(db,sqlSelect, "Name = ?", arrayOf(name), null, null, null)
 
         var result:ByteArray?=null
@@ -43,7 +47,7 @@ class db(context: Context) : SQLiteAssetHelper(context, DATABASE_NAME, null, DB_
     companion object {
         private const val DATABASE_NAME = "SaveBitmap.db"
         private const val DB_VER=1
-        private const val TABLE_NAME = "Gallery"
+        private const val TABLE_NAME1 = "Gallery"
         private const val COL_NAME="Name"
         private const val COL_DATA = "Data"
     }

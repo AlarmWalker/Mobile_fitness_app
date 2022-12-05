@@ -18,6 +18,8 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.view.isVisible
+import ca.unb.mobiledev.superduperfitnessapp.db.db
+import ca.unb.mobiledev.superduperfitnessapp.db.db2
 import com.google.android.gms.location.*
 import java.text.SimpleDateFormat
 import java.util.*
@@ -268,6 +270,13 @@ class RunningActivity: AppCompatActivity() {
 
         val formattedDistance = String.format("%.2f", totalDistance)
         messageText.text = "You lost.\nYou ran a total of " + formattedDistance + "m in " + ((elapsedTime.timeInMillis-startTime)/1000).toString() + "s."
+        val status = db2(applicationContext).addRecord(MainActivity.userName, (elapsedTime.timeInMillis-startTime)/1000)
+
+        if(status > -1) {
+            Toast.makeText(this, "Record Added", Toast.LENGTH_SHORT).show()
+        } else{
+            Log.i("sql", "unable to add the record")
+        }
     }
 
     /*

@@ -8,10 +8,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.TextView
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import ca.unb.mobiledev.superduperfitnessapp.db.db
 import ca.unb.mobiledev.superduperfitnessapp.util.dbUtil
@@ -66,6 +63,8 @@ MainActivity : AppCompatActivity() {
             if(database.getBitmapByName(savedName.text.toString()) != null){
                 val bitmap: Bitmap = dbUtil.getImage(database.getBitmapByName(savedName.text.toString())!!)
                 profileIcon.setImageBitmap(bitmap)
+                userName = savedName.text.toString()
+                Toast.makeText(this@MainActivity, "loaded", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -88,5 +87,9 @@ MainActivity : AppCompatActivity() {
 
     private fun getTime(): String? {
         return sdf.format(Date(System.currentTimeMillis()))
+    }
+
+    companion object {
+        var userName: String = ""
     }
 }
