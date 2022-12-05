@@ -67,6 +67,17 @@ MainActivity : AppCompatActivity() {
                 Toast.makeText(this@MainActivity, "loaded", Toast.LENGTH_SHORT).show()
             }
         }
+
+        val recordButton = findViewById<Button>(R.id.recordButton)
+
+        recordButton.setOnClickListener{
+            val intent = Intent(this@MainActivity, RecordActivity::class.java)
+            try{
+                startActivity(intent)
+            } catch(ex: ActivityNotFoundException){
+                Log.e(TAG, "Unable to load record activity", ex)
+            }
+        }
     }
 
 
