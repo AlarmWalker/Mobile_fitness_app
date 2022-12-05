@@ -36,7 +36,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/button_id"
+        android:id="@+id/recordButton"
         android:layout_width="209dp"
         android:layout_height="70dp"
         android:layout_centerInParent="true"
@@ -64,7 +64,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button_id" />
+        app:layout_constraintTop_toBottomOf="@+id/recordButton" />
 
     <ImageView
         android:id="@+id/setting_icon"
