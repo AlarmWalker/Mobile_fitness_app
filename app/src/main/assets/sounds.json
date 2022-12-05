@@ -1,28 +1,28 @@
 {
   "sounds": [
     {
-      "soundID": "footsteps1",
-      "name": "Footsteps 1",
-      "description": "Footsteps on concrete.",
-      "soundTitle": "concrete_footsteps_1.mp3"
+      "soundID": "goose",
+      "name": "Goose",
+      "description": "Goose",
+      "soundTitle": "goose.mp3",
+      "soundImage": "goose_icon",
+      "thumbnail" : "goose_thumb"
     },
     {
-      "soundID": "footsteps2",
-      "name": "Footsteps 2",
-      "description": "Footsteps on grass",
-      "soundTitle": "grass_footsteps_1.mp3"
+      "soundID": "dog",
+      "name": "Dog",
+      "description": "Dog",
+      "soundTitle": "buzz.mp3",
+      "soundImage": "dog_icon",
+      "thumbnail" : "dog_thumb"
     },
     {
-      "soundID": "goose1",
-      "name": "Goose 1",
-      "description": "Goose 1",
-      "soundTitle": "goose_1.mp3"
-    },
-    {
-      "soundID": "buzz1",
-      "name": "Buzz 1",
-      "description": "Buzz 1",
-      "soundTitle": "buzz_1.mp3"
+      "soundID": "bear",
+      "name": "Bear",
+      "description": "Bear",
+      "soundTitle": "buzz.mp3",
+      "soundImage": "bear_icon",
+      "thumbnail" : "bear_thumb"
     }
   ]
 }

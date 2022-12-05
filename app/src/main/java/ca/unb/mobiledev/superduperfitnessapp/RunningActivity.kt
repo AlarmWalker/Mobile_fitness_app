@@ -78,18 +78,6 @@ class RunningActivity: AppCompatActivity() {
         // Create an instance of the FusedLocationProviderClient
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
-        /*
-        locationButton = findViewById(R.id.location_button)
-        locationButton.setOnClickListener {
-            val fileName = extras?.getString("soundTitle")
-            audioPlayer(fileName.toString())
-
-            runClock()
-            lastLocation
-        }
-
-         */
-
         startButton = findViewById(R.id.startRun_button)
         startButton.setOnClickListener { start() }
 
@@ -140,6 +128,9 @@ class RunningActivity: AppCompatActivity() {
                     countdownText.isEnabled = false
                     viewDisable(countdownText)
 
+                    val intent = intent
+                    val extras = intent.extras
+
                     viewEnable(timerText)
                     viewEnable(distanceText)
                     viewEnable(messageText)
@@ -148,8 +139,12 @@ class RunningActivity: AppCompatActivity() {
 
                     distanceBar.isEnabled = false
 
-                    val intent = intent
-                    val extras = intent.extras
+                    val resId = resources.getIdentifier(
+                        extras?.getString("thumbnail"),
+                        "drawable",
+                        applicationContext.packageName
+                    )
+                    distanceBar.thumb = resources.getDrawable(resId, theme)
 
                     val fileName = extras?.getString("soundTitle")
                     audioPlayer(fileName.toString())
@@ -278,28 +273,6 @@ class RunningActivity: AppCompatActivity() {
             Log.i("sql", "unable to add the record")
         }
     }
-
-    /*
-    private fun setTextViewDisplay(location: Location) {
-        Log.e("setTextViewDisplay", "Running")
-        val latitude = location.latitude.toString()
-        val longitude = location.longitude.toString()
-        val accuracy = location.accuracy.toString()
-
-        val time = (elapsedTime.timeInMillis - startTime)/1000
-        val speed = (prevLocation.distanceTo(location)/time).toString()
-        val text = "Location:\n" + getString(R.string.location_details, latitude, longitude, accuracy, time.toString(), speed)
-        val text2 = "Last location:\n" + getString(R.string.location_details2, prevLocation.latitude.toString(),
-            prevLocation.longitude.toString(), prevLocation.accuracy.toString())
-        distanceText.text = text
-        messageText.text = text2
-
-        currVolume = (prevLocation.distanceTo(location)/time).toDouble()
-        val log1 = (Math.log(maxVolume - (10-currVolume)) / Math.log(maxVolume)).toFloat()
-        player.setVolume(log1, log1)
-    }
-
-     */
 
     /**
      * Method to determine if the user has granted the appropriate access levels

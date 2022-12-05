@@ -9,4 +9,5 @@
     <!--UI Elements-->
     <string name="startRun_button">Start</string>
     <string name="end_button">End</string>
+    <string name="confirm_button">Confirm</string>
 </resources>

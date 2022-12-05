@@ -35,7 +35,7 @@ class JsonUtils(context: Context) {
                 val obj = jsonArray.getJSONObject(i)
 
                 val sound = Sound.Builder().id(obj.getString(KEY_SOUND_ID)).name(obj.getString(KEY_NAME)).description(obj.getString(KEY_DESCRIPTION)).soundTitle(obj.getString(
-                    KEY_SOUND_TITLE)).build()
+                    KEY_SOUND_TITLE)).soundImage(obj.getString(KEY_SOUND_IMAGE)).thumbnail(obj.getString(KEY_THUMBNAIL)).build()
 
                 sounds.add(i, sound)
             }
@@ -73,5 +73,7 @@ class JsonUtils(context: Context) {
         private const val KEY_NAME = "name"
         private const val KEY_DESCRIPTION = "description"
         private const val KEY_SOUND_TITLE = "soundTitle"
+        private const val KEY_SOUND_IMAGE = "soundImage"
+        private const val KEY_THUMBNAIL = "thumbnail"
     }
 }
