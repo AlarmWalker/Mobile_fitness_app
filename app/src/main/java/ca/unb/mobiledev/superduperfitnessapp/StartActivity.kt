@@ -33,6 +33,9 @@ class StartActivity : AppCompatActivity() {
 
         val adp = MyAdapter(sounds, this)
         view.adapter = adp
+
+        supportActionBar?.title = "Select sound"
+        supportActionBar?.show()
     }
 
     fun returnView() : RecyclerView {

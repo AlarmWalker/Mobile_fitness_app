@@ -23,6 +23,22 @@
       "soundTitle": "buzz.mp3",
       "soundImage": "bear_icon",
       "thumbnail" : "bear_thumb"
+    },
+    {
+      "soundID": "temp1",
+      "name": "Temp1",
+      "description": "Temp1",
+      "soundTitle": "grass_footsteps_1.mp3",
+      "soundImage": "temp_icon",
+      "thumbnail" : "temp_thumb"
+    },
+    {
+      "soundID": "temp2",
+      "name": "Temp2",
+      "description": "Temp2",
+      "soundTitle": "concrete_footsteps_1.mp3",
+      "soundImage": "temp_icon",
+      "thumbnail" : "temp_thumb"
     }
   ]
 }
