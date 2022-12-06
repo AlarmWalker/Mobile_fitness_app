@@ -12,7 +12,7 @@
       "soundID": "dog",
       "name": "Dog",
       "description": "Dog",
-      "soundTitle": "buzz.mp3",
+      "soundTitle": "dog.mp3",
       "soundImage": "dog_icon",
       "thumbnail" : "dog_thumb"
     },
@@ -20,7 +20,7 @@
       "soundID": "bear",
       "name": "Bear",
       "description": "Bear",
-      "soundTitle": "buzz.mp3",
+      "soundTitle": "bear.mp3",
       "soundImage": "bear_icon",
       "thumbnail" : "bear_thumb"
     },

@@ -7,11 +7,14 @@
     <string name="location_details2">Latitude: %1$s, Longitude: %2$s, Accuracy: %3$s</string>
 
     <!--Text-->
-    <string name="location_tracking">Distance ran:\t %1$s m\nEntity distance:\t %2$s m</string>
+    <string name="location_tracking">Distance ran:\t\t%1$s m\nEntity distance:\t\t%2$s m</string>
+    <string name="lost_text">You lost.\nYou ran a total of %1$sm in %2$ss</string>
 
     <!--UI Elements-->
     <string name="startRun_button">Start</string>
     <string name="end_button">End</string>
     <string name="confirm_button">Confirm</string>
     <string name="return_button">Return</string>
+    <string name="speed_selection">Running speed</string>
+    <string name="speed_helper">Speed (m/s)</string>
 </resources>

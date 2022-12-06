@@ -4,10 +4,12 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.content.ActivityNotFoundException
 import android.content.Intent
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationManager
 import android.media.MediaPlayer
+import android.media.SoundPool
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.os.Handler
@@ -29,36 +31,35 @@ import kotlin.math.log
 class RunningActivity: AppCompatActivity() {
     private var mHandler: Handler = Handler(Looper.getMainLooper())
     private var mActive : Boolean = false
-    private val sdf: SimpleDateFormat = SimpleDateFormat("HH:mm:ss")
+    private val sdf: SimpleDateFormat = SimpleDateFormat("H:mm:ss")
+
     private lateinit var timerText : TextView
     private lateinit var elapsedTime : Calendar
-
     private lateinit var startButton : Button
     private lateinit var endButton : Button
     private lateinit var countdownText : TextView
-
-    // Location provider
+    private lateinit var distanceText: TextView
+    private lateinit var messageText: TextView
+    private lateinit var distanceBar : SeekBar
+    private lateinit var player : MediaPlayer
     private var fusedLocationClient: FusedLocationProviderClient? = null
     private lateinit var prevLocation : Location
 
     private var startTime : Long = 0
-    private var distanceFromPlayer : Double = 120.0
+    private var distanceFromPlayer : Double = 100.0
     private var entitySpeed : Long = 8
     private var totalDistance : Double = 0.0
-
-    private lateinit var distanceText: TextView
-    private lateinit var messageText: TextView
-
-    private lateinit var distanceBar : SeekBar
-
-    private lateinit var player : MediaPlayer
     private val maxVolume : Double = 10.0
 
     private var lost = false
+    private var prefs: SharedPreferences? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.running_activity)
+        initSharedPreferences()
+
+        entitySpeed = prefs!!.getInt(SPEED_KEY, 0).toLong()
 
         supportActionBar?.hide()
 
@@ -135,7 +136,6 @@ class RunningActivity: AppCompatActivity() {
         Handler(Looper.getMainLooper()).postDelayed({
             val timer = object: CountDownTimer(5000, 250) {
 
-
                 override fun onTick(millisUntilFinished: Long) {
                     if (millisUntilFinished < 1000) {
                         countdownText.text = "1"
@@ -204,6 +204,7 @@ class RunningActivity: AppCompatActivity() {
             val afd = assets.openFd(fileName)
             player = MediaPlayer()
             player.setDataSource(afd.fileDescriptor, afd.startOffset, afd.length)
+            player.isLooping = true
             player.prepare()
         }
 
@@ -224,8 +225,6 @@ class RunningActivity: AppCompatActivity() {
                     .addOnSuccessListener(this) { lastLocation: Location? ->
                         // Got last known location. In some rare situations this can be null.
                         if (lastLocation != null) {
-                            Log.e("lastLocation", "Running")
-
                             if (!this::prevLocation.isInitialized) {
                                 prevLocation = lastLocation
                             }
@@ -236,9 +235,9 @@ class RunningActivity: AppCompatActivity() {
                             prevLocation = lastLocation
                         } else {
                             Handler(Looper.getMainLooper()).postDelayed({
-                                distanceText!!.text = getString(R.string.fetch_location_error)
+                                distanceText.text = getString(R.string.fetch_location_error)
                                 requestNewLocationData()
-                            }, 2000)
+                            }, 500)
                         }
                     }
             } else {
@@ -250,8 +249,14 @@ class RunningActivity: AppCompatActivity() {
 
     private fun locationUpdate(lastLocation : Location) {
         // Sound adjustment
-        val time = UPDATE_INTERVAL/1000
-        val speed = prevLocation.distanceTo(lastLocation)/time
+
+        var time = UPDATE_INTERVAL/1000
+        var speed = prevLocation.distanceTo(lastLocation)/time
+
+        if ((elapsedTime.timeInMillis-startTime)/1000 < UPDATE_INTERVAL/1000) {
+            time = 0
+            speed = 0F
+        }
 
         distanceFromPlayer -= time*(entitySpeed-speed)
         totalDistance += time*speed
@@ -268,7 +273,7 @@ class RunningActivity: AppCompatActivity() {
         // Current setting is 100m as the max distance for sound
         var log1 = log(maxVolume-(9*distanceFromPlayer/100), 10.0).toFloat()
         if (distanceFromPlayer > 100) {
-            log1 = 0.1f
+            log1 = 0.5f
             distanceBar.progress = 0
         }
         else {
@@ -282,7 +287,6 @@ class RunningActivity: AppCompatActivity() {
     }
 
     private fun lost() {
-        Log.e("lost", "User lost.")
         lost = true
         endButton.text = getString(R.string.return_button)
         player.stop()
@@ -291,11 +295,12 @@ class RunningActivity: AppCompatActivity() {
         runClock()
 
         val formattedDistance = String.format("%.2f", totalDistance)
-        messageText.text = "You lost.\nYou ran a total of " + formattedDistance + "m in " + ((elapsedTime.timeInMillis-startTime)/1000).toString() + "s."
-        val status = db2(applicationContext).addRecord(MainActivity.userName, (elapsedTime.timeInMillis-startTime)/1000)
+        messageText.text = getString(R.string.lost_text, formattedDistance, ((elapsedTime.timeInMillis-startTime)/1000).toString())
+
+        val status = db2(applicationContext).addRecord(MainActivity.userName, (elapsedTime.timeInMillis-startTime)/1000, entitySpeed)
 
         if(status > -1) {
-            Toast.makeText(this, "Record Added", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "RecordAdded ", Toast.LENGTH_SHORT).show()
         } else{
             Log.i("sql", "unable to add the record")
         }
@@ -376,12 +381,17 @@ class RunningActivity: AppCompatActivity() {
         }
     }
 
-    override fun onBackPressed() {
+    private fun initSharedPreferences() {
+        prefs = getSharedPreferences(PREFS_FILE_NAME, MODE_PRIVATE)
     }
 
+    override fun onBackPressed() {}
+
     companion object {
+        private const val PREFS_FILE_NAME = "AppPrefs"
+        private const val SPEED_KEY = "SPEED_KEY"
         private const val TAG = "TAG"
-        private const val UPDATE_INTERVAL: Long = 3000
+        private const val UPDATE_INTERVAL: Long = 1000
         private const val LOCATION_REQUEST = 101
     }
 }

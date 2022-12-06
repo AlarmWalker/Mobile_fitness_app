@@ -16,8 +16,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 
-class
-MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity() {
 
     private var mHandler: Handler = Handler(Looper.getMainLooper())
     private lateinit var mClock : TextView

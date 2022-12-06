@@ -9,7 +9,7 @@
     android:paddingRight="16dp"
     android:paddingTop="16dp"
     android:orientation="vertical"
-    tools:context="ca.unb.mobiledev.superduperfitnessapp.SoundActivity">
+    tools:context="ca.unb.mobiledev.superduperfitnessapp.prototype_test.SoundActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"

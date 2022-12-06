@@ -15,12 +15,15 @@
 
     <RelativeLayout
         android:layout_width="375dp"
-        android:layout_height="99dp">
+        android:layout_height="133dp">
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/medal"
             android:layout_width="86dp"
             android:layout_height="77dp"
+            android:layout_alignParentStart="false"
+            android:layout_centerHorizontal="false"
+            android:layout_centerVertical="true"
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="10dp"
@@ -53,7 +56,7 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/userName4"
+            android:id="@+id/userName3"
             android:layout_width="71dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="-1dp"
@@ -65,16 +68,41 @@
             android:textStyle="bold" />
 
         <TextView
+            android:id="@+id/speed_record_text"
+            android:layout_width="71dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="-1dp"
+            android:layout_marginTop="100dp"
+            android:layout_toEndOf="@id/medal"
+            android:text="Speed:"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
             android:id="@+id/record"
             android:layout_width="203dp"
             android:layout_height="wrap_content"
             android:layout_below="@id/userName"
             android:layout_marginStart="63dp"
-            android:layout_marginTop="22dp"
+            android:layout_marginTop="21dp"
             android:layout_toEndOf="@id/medal"
             android:drawablePadding="2dp"
+            android:text=""
             android:textColor="@color/black"
-            android:textSize="18sp"
-            android:text="" />
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/speed_record_value"
+            android:layout_width="203dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/userName"
+            android:layout_marginStart="63dp"
+            android:layout_marginTop="66dp"
+            android:layout_toEndOf="@id/medal"
+            android:drawablePadding="2dp"
+            android:text=""
+            android:textColor="@color/black"
+            android:textSize="18sp" />
     </RelativeLayout>
 </androidx.cardview.widget.CardView>

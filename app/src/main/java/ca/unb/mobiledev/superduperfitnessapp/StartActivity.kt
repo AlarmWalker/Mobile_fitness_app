@@ -34,7 +34,7 @@ class StartActivity : AppCompatActivity() {
         val adp = MyAdapter(sounds, this)
         view.adapter = adp
 
-        supportActionBar?.title = "Select sound"
+        supportActionBar?.title = "Sound selection"
         supportActionBar?.show()
     }
 
@@ -120,6 +120,7 @@ class StartActivity : AppCompatActivity() {
                 player.setDataSource(afd.fileDescriptor, afd.startOffset, afd.length)
                 player.prepare()
                 player.setVolume(0.5f, 0.5f)
+                player.isLooping = true
 
                 currentSound = fileName
             }
@@ -176,4 +177,6 @@ class StartActivity : AppCompatActivity() {
             return mDataset.size
         }
     }
+
+    override fun onBackPressed() {}
 }

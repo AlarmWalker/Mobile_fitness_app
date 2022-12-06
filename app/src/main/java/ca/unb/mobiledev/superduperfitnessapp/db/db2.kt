@@ -14,12 +14,13 @@ import java.lang.Exception
 class db2(context: Context) : SQLiteAssetHelper(context, DATABASE_NAME, null, DB_VER) {
 
     @Throws(SQLiteException::class)
-    fun addRecord(name: String, data: Long): Long{
+    fun addRecord(name: String, data: Long, speed: Long): Long{
         val db = this.writableDatabase
         val cv = ContentValues()
 
         cv.put(COL_NAME, name)
         cv.put(COL_DATA, data)
+        cv.put(COL_SPEED, speed)
 
         val success = db.insertOrThrow(TABLE_NAME2, null, cv)
         db.close()
@@ -44,12 +45,14 @@ class db2(context: Context) : SQLiteAssetHelper(context, DATABASE_NAME, null, DB
 
         var name: String
         var data: Long
+        var speed: Long
 
         if(cursor.moveToFirst()){
             do{
                 name = cursor.getString(cursor.getColumnIndex("Name"))
                 data = cursor.getLong(cursor.getColumnIndex("Data"))
-                val record = Record(name = name, data = data)
+                speed = cursor.getLong(cursor.getColumnIndex("Speed"))
+                val record = Record(name = name, data = data, speed = speed)
                 recordList.add(record)
             }while (cursor.moveToNext())
         }
@@ -61,6 +64,7 @@ class db2(context: Context) : SQLiteAssetHelper(context, DATABASE_NAME, null, DB
         private const val DB_VER=1
         private const val COL_NAME="Name"
         private const val COL_DATA = "Data"
+        private const val COL_SPEED = "Speed"
         private const val TABLE_NAME2 = "Record"
     }
 

@@ -35,10 +35,12 @@ class RecordAdapter : RecyclerView.Adapter<RecordAdapter.RecordViewHolder>(){
         private var medal = view.findViewById<ImageView>(R.id.medal)
         private var name = view.findViewById<TextView>(R.id.userName)
         private var record = view.findViewById<TextView>(R.id.record)
+        private var speed = view.findViewById<TextView>(R.id.speed_record_value)
 
         fun bindView(rcd: Record){
             name.text = rcd.name
             record.text = rcd.data.toString()
+            speed.text = rcd.speed.toString()
             val bitmap: Bitmap = dbUtil.getImage(rcd.image!!)
             medal.setImageBitmap(bitmap)
         }
