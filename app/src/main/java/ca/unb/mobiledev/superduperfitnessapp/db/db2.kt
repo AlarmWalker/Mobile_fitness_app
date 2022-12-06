@@ -29,7 +29,7 @@ class db2(context: Context) : SQLiteAssetHelper(context, DATABASE_NAME, null, DB
     @SuppressLint("Range")
     fun getRecord(): ArrayList<Record>{
         val recordList: ArrayList<Record> = ArrayList()
-        val selectQuery = "SELECT * FROM $TABLE_NAME2 ORDER BY Data LIMIT 5"
+        val selectQuery = "SELECT * FROM $TABLE_NAME2 ORDER BY Data DESC LIMIT 5"
         val db = this.readableDatabase
 
         val cursor: Cursor?
@@ -57,7 +57,7 @@ class db2(context: Context) : SQLiteAssetHelper(context, DATABASE_NAME, null, DB
     }
 
     companion object {
-        private const val DATABASE_NAME = "SaveRecord.db"
+        private const val DATABASE_NAME = "111.db"
         private const val DB_VER=1
         private const val COL_NAME="Name"
         private const val COL_DATA = "Data"
