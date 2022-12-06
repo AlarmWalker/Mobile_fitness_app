@@ -57,7 +57,7 @@ class db2(context: Context) : SQLiteAssetHelper(context, DATABASE_NAME, null, DB
     }
 
     companion object {
-        private const val DATABASE_NAME = "111.db"
+        private const val DATABASE_NAME = "22.db"
         private const val DB_VER=1
         private const val COL_NAME="Name"
         private const val COL_DATA = "Data"

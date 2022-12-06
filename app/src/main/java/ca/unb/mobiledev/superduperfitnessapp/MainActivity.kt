@@ -39,7 +39,11 @@ MainActivity : AppCompatActivity() {
         startButton.setOnClickListener {
             val intent = Intent(this@MainActivity, StartActivity::class.java)
             try {
-                startActivity(intent)
+                if(loaded) {
+                    startActivity(intent)
+                } else{
+                    Toast.makeText(this@MainActivity, "Please load the profile first", Toast.LENGTH_SHORT).show()
+                }
             } catch (ex: ActivityNotFoundException) {
                 Log.e(TAG, "Unable to load activity", ex)
             }
@@ -66,7 +70,11 @@ MainActivity : AppCompatActivity() {
                 val bitmap: Bitmap = dbUtil.getImage(database.getBitmapByName(savedName.text.toString())!!)
                 profileIcon.setImageBitmap(bitmap)
                 userName = savedName.text.toString()
+                loaded = true
                 Toast.makeText(this@MainActivity, "loaded", Toast.LENGTH_SHORT).show()
+            }
+            else {
+                Toast.makeText(this@MainActivity, "Set profile first!", Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -104,5 +112,6 @@ MainActivity : AppCompatActivity() {
 
     companion object {
         var userName: String = ""
+        var loaded: Boolean = false
     }
 }
