@@ -70,7 +70,7 @@ class MainActivity : AppCompatActivity() {
                 profileIcon.setImageBitmap(bitmap)
                 userName = savedName.text.toString()
                 loaded = true
-                Toast.makeText(this@MainActivity, "loaded", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@MainActivity, "Profile loaded", Toast.LENGTH_SHORT).show()
             }
             else {
                 Toast.makeText(this@MainActivity, "Set profile first!", Toast.LENGTH_SHORT).show()

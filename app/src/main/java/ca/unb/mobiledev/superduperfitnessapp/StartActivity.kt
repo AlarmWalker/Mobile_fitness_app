@@ -52,10 +52,6 @@ class StartActivity : AppCompatActivity() {
         class ViewHolder(var view: View) : RecyclerView.ViewHolder(
             view)
 
-        // The inflate method of the LayoutInflater class can be used to obtain the
-        // View object corresponding to an XML layout resource file. Here
-        // onCreateViewHolder inflates the TextView corresponding to item_layout.xml
-        // and uses it to instantiate a ViewHolder.
         override fun onCreateViewHolder(
             parent: ViewGroup,
             viewType: Int
@@ -65,10 +61,8 @@ class StartActivity : AppCompatActivity() {
             return ViewHolder(v)
         }
 
-        // onBindViewHolder binds a ViewHolder to the data at the specified
-        // position in mDataset
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-            val sound = mDataset[position]
+            var sound = mDataset[position]
 
             val title = holder.view.findViewById<TextView>(R.id.soundText)
             title.text = sound.description

@@ -300,7 +300,7 @@ class RunningActivity: AppCompatActivity() {
         val status = db2(applicationContext).addRecord(MainActivity.userName, (elapsedTime.timeInMillis-startTime)/1000, entitySpeed)
 
         if(status > -1) {
-            Toast.makeText(this, "RecordAdded ", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Record Added ", Toast.LENGTH_SHORT).show()
         } else{
             Log.i("sql", "unable to add the record")
         }
