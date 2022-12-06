@@ -8,22 +8,22 @@
         <entry key="..\:/Users/kkw71/CS2063 project/app/src/main/res/drawable/ic_baseline_account_circle_24.xml" value="0.295" />
         <entry key="..\:/Users/kkw71/CS2063 project/app/src/main/res/drawable/ic_baseline_settings_24.xml" value="0.221" />
         <entry key="..\:/Users/kkw71/CS2063 project/app/src/main/res/drawable/ic_launcher_background.xml" value="0.221" />
+        <entry key="..\:/Users/kkw71/CS2063 project/app/src/main/res/layout/activity_detail.xml" value="0.21510416666666668" />
         <entry key="..\:/Users/kkw71/CS2063 project/app/src/main/res/layout/activity_main.xml" value="0.358695652173913" />
         <entry key="..\:/Users/kkw71/CS2063 project/app/src/main/res/layout/activity_start.xml" value="0.1875" />
         <entry key="..\:/Users/kkw71/CS2063 project/app/src/main/res/layout/item_layout.xml" value="0.360054347826087" />
+        <entry key="..\:/Users/kkw71/CS2063 project/app/src/main/res/layout/item_sound.xml" value="0.21510416666666668" />
         <entry key="..\:/Users/kkw71/CS2063 project/app/src/main/res/layout/record_activity.xml" value="0.2140625" />
+        <entry key="..\:/Users/kkw71/CS2063 project/app/src/main/res/layout/record_layout.xml" value="0.33" />
         <entry key="..\:/Users/kkw71/CS2063 project/app/src/main/res/layout/setting_activity.xml" value="0.33" />
         <entry key="..\:/Users/wooye/AndroidStudioProjects/animated-spoon/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.1815" />
-        <entry key="..\:/Users/wooye/AndroidStudioProjects/animated-spoon/app/src/main/res/drawable/border.xml" value="0.1815" />
         <entry key="..\:/Users/wooye/AndroidStudioProjects/animated-spoon/app/src/main/res/drawable/custom_button.xml" value="0.1815" />
         <entry key="..\:/Users/wooye/AndroidStudioProjects/animated-spoon/app/src/main/res/drawable/seekbar_progressbar.xml" value="0.2315" />
         <entry key="..\:/Users/wooye/AndroidStudioProjects/animated-spoon/app/src/main/res/layout/activity_detail.xml" value="0.25" />
         <entry key="..\:/Users/wooye/AndroidStudioProjects/animated-spoon/app/src/main/res/layout/activity_main.xml" value="0.25" />
         <entry key="..\:/Users/wooye/AndroidStudioProjects/animated-spoon/app/src/main/res/layout/activity_start.xml" value="0.358695652173913" />
-        <entry key="..\:/Users/wooye/AndroidStudioProjects/animated-spoon/app/src/main/res/layout/item_layout.xml" value="0.33" />
-        <entry key="..\:/Users/wooye/AndroidStudioProjects/animated-spoon/app/src/main/res/layout/item_layout_2.xml" value="0.23731884057971014" />
-        <entry key="..\:/Users/wooye/AndroidStudioProjects/animated-spoon/app/src/main/res/layout/item_sound.xml" value="0.33" />
-        <entry key="..\:/Users/wooye/AndroidStudioProjects/animated-spoon/app/src/main/res/layout/running_activity.xml" value="0.25" />
+        <entry key="..\:/Users/wooye/AndroidStudioProjects/animated-spoon/app/src/main/res/layout/item_layout.xml" value="0.358695652173913" />
+        <entry key="..\:/Users/wooye/AndroidStudioProjects/animated-spoon/app/src/main/res/layout/running_activity.xml" value="0.33" />
         <entry key="..\:/Users/wooye/AndroidStudioProjects/animated-spoon/app/src/main/res/layout/start_activity.xml" value="0.18768996960486323" />
       </map>
     </option>

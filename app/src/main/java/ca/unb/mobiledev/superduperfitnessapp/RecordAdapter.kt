@@ -1,5 +1,6 @@
 package ca.unb.mobiledev.superduperfitnessapp
 
+import android.graphics.Bitmap
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -7,6 +8,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import ca.unb.mobiledev.superduperfitnessapp.model.Record
+import ca.unb.mobiledev.superduperfitnessapp.util.dbUtil
 
 class RecordAdapter : RecyclerView.Adapter<RecordAdapter.RecordViewHolder>(){
 
@@ -37,6 +39,8 @@ class RecordAdapter : RecyclerView.Adapter<RecordAdapter.RecordViewHolder>(){
         fun bindView(rcd: Record){
             name.text = rcd.name
             record.text = rcd.data.toString()
+            val bitmap: Bitmap = dbUtil.getImage(rcd.image!!)
+            medal.setImageBitmap(bitmap)
         }
     }
 
