@@ -2,6 +2,7 @@ package ca.unb.mobiledev.superduperfitnessapp
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
@@ -17,8 +18,8 @@ import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
-import ca.unb.mobiledev.superduperfitnessapp.db.db
 import ca.unb.mobiledev.superduperfitnessapp.db.db2
 import com.google.android.gms.location.*
 import java.text.SimpleDateFormat
@@ -53,9 +54,13 @@ class RunningActivity: AppCompatActivity() {
     private lateinit var player : MediaPlayer
     private val maxVolume : Double = 10.0
 
+    private var lost = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.running_activity)
+
+        supportActionBar?.hide()
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
@@ -82,7 +87,23 @@ class RunningActivity: AppCompatActivity() {
         startButton.setOnClickListener { start() }
 
         endButton = findViewById(R.id.end_button)
-        endButton.setOnClickListener { lost() }
+        endButton.text = getString(R.string.end_button)
+        endButton.setOnClickListener {
+            if (lost) {
+                val intent = Intent(this, MainActivity::class.java)
+                val extras = intent.extras
+
+                try {
+                    ContextCompat.startActivity(this, intent, extras)
+                } catch (ex: ActivityNotFoundException) {
+                    Log.e("Intent", "Unable to load activity", ex)
+                }
+
+            }
+            else {
+                lost()
+            }
+        }
 
         // Setting initial view visibilities
         viewEnable(startButton)
@@ -211,7 +232,6 @@ class RunningActivity: AppCompatActivity() {
 
                             requestNewLocationData()
                             locationUpdate(lastLocation)
-                            //setTextViewDisplay(lastLocation)
 
                             prevLocation = lastLocation
                         } else {
@@ -219,8 +239,6 @@ class RunningActivity: AppCompatActivity() {
                                 distanceText!!.text = getString(R.string.fetch_location_error)
                                 requestNewLocationData()
                             }, 2000)
-                            //distanceText!!.text = getString(R.string.fetch_location_error)
-                            //requestNewLocationData()
                         }
                     }
             } else {
@@ -238,7 +256,14 @@ class RunningActivity: AppCompatActivity() {
         distanceFromPlayer -= time*(entitySpeed-speed)
         totalDistance += time*speed
 
-        distanceText.text = totalDistance.toString() + "m ran\n" + distanceFromPlayer + "m from you."
+        val formatTotal = String.format("%.2f", totalDistance)
+        var formatDistance = String.format("%.2f", distanceFromPlayer)
+
+        if (distanceFromPlayer < 0) {
+            formatDistance = "0.00"
+        }
+
+        distanceText.text = getString(R.string.location_tracking, formatTotal, formatDistance)
 
         // Current setting is 100m as the max distance for sound
         var log1 = log(maxVolume-(9*distanceFromPlayer/100), 10.0).toFloat()
@@ -258,6 +283,8 @@ class RunningActivity: AppCompatActivity() {
 
     private fun lost() {
         Log.e("lost", "User lost.")
+        lost = true
+        endButton.text = getString(R.string.return_button)
         player.stop()
         fusedLocationClient!!.removeLocationUpdates(mLocationCallback)
 
@@ -347,6 +374,9 @@ class RunningActivity: AppCompatActivity() {
         override fun onLocationResult(locationResult: LocationResult) {
             locationResult.lastLocation?.let { lastLocation }
         }
+    }
+
+    override fun onBackPressed() {
     }
 
     companion object {

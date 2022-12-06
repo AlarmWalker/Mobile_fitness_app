@@ -29,7 +29,9 @@ MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        mClock = findViewById<TextView>(R.id.time)
+        supportActionBar?.hide()
+
+        mClock = findViewById(R.id.time)
         startClock()
 
         val startButton = findViewById<Button>(R.id.start_button)

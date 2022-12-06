@@ -6,8 +6,12 @@
     <string name="location_details">Latitude: %1$s, Longitude: %2$s, Accuracy: %3$s, Time: %4$s, Speed: %5$s</string>
     <string name="location_details2">Latitude: %1$s, Longitude: %2$s, Accuracy: %3$s</string>
 
+    <!--Text-->
+    <string name="location_tracking">Distance ran:\t %1$s m\nEntity distance:\t %2$s m</string>
+
     <!--UI Elements-->
     <string name="startRun_button">Start</string>
     <string name="end_button">End</string>
     <string name="confirm_button">Confirm</string>
+    <string name="return_button">Return</string>
 </resources>
